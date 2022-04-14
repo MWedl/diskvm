@@ -1,0 +1,7 @@
+click
+python-registry
+python-decouple
+cryptography
+impacket
+git+https://github.com/MWedl/pyreadpartitions
+
