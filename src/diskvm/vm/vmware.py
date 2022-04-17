@@ -102,7 +102,6 @@ class VMwareVirtualMachineBuilder(VirtualMachineBuilder):
         vmx.append(f'guestOS = "{self.guest_os or "other-64"}"')
 
         # Virtual disks
-        # TODO: test with multiple disks
         for i, db in enumerate(self.disks):
             # Write VMDK file
             d = db.write(out_dir)

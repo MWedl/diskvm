@@ -10,7 +10,7 @@ from diskvm.data import VolumeInfo, DiskVmCreatorContext, DiskInfo
 from diskvm.errors import DiskVmError
 from diskvm.plugins.base import PluginSpec
 from diskvm.plugins.generic import LvmMountPlugin
-from diskvm.utils import run_process, size_blockdevice
+from diskvm.utils import run_process
 from diskvm.vm.base import VirtualDiskBuilder, VirtualDiskPart
 
 
@@ -129,13 +129,16 @@ class LuksAddPasswordPlugin(LuksMountPlugin):
 
 
 class LuksOnTheFlyDecryptPlugin(LuksMountPlugin):
+    # NOTE: plugin does not work well with LVM: cannot mount LVM volume writeable from virtual disk
+    #       because the same LVM volume is mounted read-only from the original disk image
+    #       One cannot access two LVM devices with same volume group: PV xxx prefers device yyy
+
     def before_create_disk(self, disk_builder: VirtualDiskBuilder, disk_info: DiskInfo, ctx: DiskVmCreatorContext):
         for volume_info in disk_info.volumes:
             if not volume_info.additional_info.get('luks', {}).get('mounted') or \
                     not volume_info.parent.additional_info.get('luks', {}).get('enabled'):
                 continue
 
-            # TODO: plugin does not work with LVM
             disk_builder.add_part(VirtualDiskPart(
                 source_file=volume_info.flat_mount,
                 source_offset=0,

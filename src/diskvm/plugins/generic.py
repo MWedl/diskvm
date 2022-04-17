@@ -22,7 +22,8 @@ class GenericMountPlugin(PluginSpec):
         try:
             stdout, stderr = self.run_mount(volume_info, fs_mount)
 
-            # # TODO: after ntfsfix, Windows cannot boot correctly (Recovery Screen, error code 0xc0000001)
+            # # NOTE: after ntfsfix, Windows 10 cannot boot correctly (Recovery Screen, error code 0xc0000001)
+            # #       on Windows 7, mount.ntfs fixes problems automatically on mount
             # # Fix NTFS filesystem when Windows was running or hibernated
             # if b'Falling back to read-only mount because the NTFS partition is in an\nunsafe state.' in stderr and \
             #         not volume_info.disk_info.readonly:
@@ -59,8 +60,6 @@ class GenericMountPlugin(PluginSpec):
 
 
 class LvmMountPlugin(PluginSpec):
-    # TODO: cannot access two LVM devices with same volume group
-    #       PV xxx prefers device yyy (can LVM devices be split, even with same VG)
     @staticmethod
     def _run_colon_output(args):
         return [l.strip().split(':') for l in run_process(args).decode('utf-8').splitlines()]

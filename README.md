@@ -27,7 +27,7 @@ pip install -r requirements.txt
 Create VM of an unencrypted disk images and boot it.
 This project needs to run as root to allow mounting the disk image and filesystems in it.
 ```shell
-sudo python3 main.py win10-unencrypted.dd --out-dir=./win7-vm/
+sudo python3 main.py win10-unencrypted.dd --out-dir=./win10-vm/
 ```
 
 

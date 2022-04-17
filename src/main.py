@@ -1,6 +1,5 @@
 import itertools
 import logging
-import operator
 import shutil
 from pathlib import Path
 
@@ -16,9 +15,6 @@ from diskvm.plugins.veracrypt import VeraCryptOnTheFlyDecryptPlugin, \
 from diskvm.plugins.bitlocker import BitLockerOverridePasswordPlugin, BitLockerOnTheFlyDecryptPlugin
 from diskvm.runner import DiskVmCreator, DiskVmCreatorOptions
 from diskvm.vm.vmware import Vmware
-
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 VIRTUALIZATION_SOFTWARE = {
@@ -61,16 +57,19 @@ def to_path(ctx, param, value: str) -> Path:
 @click.option('--master-key', type=BytesParamType(), multiple=True, required=False)
 @click.option('--master-keys-file', type=click.File(mode='r'), required=False, help='File containing possible master keys. One key per line as hex string.')
 @click.option('--xts-combine-keys', type=click.BOOL, default=True, help='Combine each key with every other to build possible XTS mode keys when keys extracted from a memory dump are provided.')
+@click.option('-v', '--verbose', count=True, default=0)
 def main(disk_image: Path, out_dir: Path, name, start_vm, virtualization_software, vm_memory, vm_cpus, guest_os, firmware,
-         pw_bypass, fde_bypass, master_key, master_keys_file, xts_combine_keys):
+         pw_bypass, fde_bypass, master_key, master_keys_file, xts_combine_keys, verbose):
+    # Set up logging
+    logging.basicConfig(level=logging.DEBUG if verbose >= 2 else logging.INFO if verbose >= 1 else logging.WARNING)
+
     out_dir.mkdir(exist_ok=True)
-    # Clear output directory
-    # TODO: testing only
-    for f in out_dir.iterdir():
-        if f.is_dir():
-            shutil.rmtree(f)
-        else:
-            f.unlink()
+    # # Clear output directory
+    # for f in out_dir.iterdir():
+    #     if f.is_dir():
+    #         shutil.rmtree(f)
+    #     else:
+    #         f.unlink()
 
     # Create a list of possible master keys
     master_keys = set(master_key or [])
