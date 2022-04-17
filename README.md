@@ -40,3 +40,9 @@ sudo python3 main.py win10-bitlocker.dd --out-dir=./win10-bde-vm/ --fde-bypass=a
 
 sudo python3 main.py win10-bitlocker.dd --out-dir=./win10-bde-vm/ --fde-bypass=auto --master-key=0f6d666998f8b4523eacad91245c2f26922bebd5e679de54cfc1bae4b881f9b4
 ```
+
+## Demo
+
+https://user-images.githubusercontent.com/29510012/163713566-4345fb0c-6dea-4f7a-b80f-4b7fe83e865b.mp4
+
+
